@@ -1,0 +1,197 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.589750889679717,
+        "y": 7.44
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.589750889679717,
+        "y": 7.44
+      },
+      "isLocked": false,
+      "linkedName": "Left Trench (L)"
+    },
+    {
+      "anchor": {
+        "x": 4.999,
+        "y": 7.44
+      },
+      "prevControl": {
+        "x": 4.749,
+        "y": 7.44
+      },
+      "nextControl": {
+        "x": 5.249,
+        "y": 7.44
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.881,
+        "y": 7.311
+      },
+      "prevControl": {
+        "x": 5.670556552233753,
+        "y": 7.445957605536907
+      },
+      "nextControl": {
+        "x": 6.182716488730724,
+        "y": 7.117508896797153
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.730830367734282,
+        "y": 5.008706998813759
+      },
+      "prevControl": {
+        "x": 5.590960854092527,
+        "y": 5.675776986951364
+      },
+      "nextControl": {
+        "x": 5.782134078808604,
+        "y": 4.764027761382376
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.635,
+        "y": 4.2555634638196915
+      },
+      "prevControl": {
+        "x": 6.247668895121318,
+        "y": 4.212527986632508
+      },
+      "nextControl": {
+        "x": 6.883471026059479,
+        "y": 4.283170513806054
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.6244483985765115,
+        "y": 4.8258007117437725
+      },
+      "prevControl": {
+        "x": 7.247958470714043,
+        "y": 4.280067870311159
+      },
+      "nextControl": {
+        "x": 7.766412926428121,
+        "y": 5.031582326160294
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.786,
+        "y": 5.86944246737841
+      },
+      "prevControl": {
+        "x": 7.927832636710647,
+        "y": 5.4747740885043665
+      },
+      "nextControl": {
+        "x": 7.291219316854357,
+        "y": 7.24623623391933
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.635,
+        "y": 7.44
+      },
+      "prevControl": {
+        "x": 6.880103091064126,
+        "y": 7.390761044377336
+      },
+      "nextControl": {
+        "x": 6.31244433215961,
+        "y": 7.5047984655994275
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.589750889679717,
+        "y": 7.44
+      },
+      "prevControl": {
+        "x": 5.709311579979605,
+        "y": 7.741544930435906
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left Trench (L)"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.95,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 2.5666074600355193,
+      "rotationDegrees": -100.0
+    },
+    {
+      "waypointRelativePos": 5.538188277087033,
+      "rotationDegrees": 80.0
+    },
+    {
+      "waypointRelativePos": 6.66,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.8436445444319274,
+      "maxWaypointRelativePos": 5.604049493813271,
+      "constraints": {
+        "maxVelocity": 1.75,
+        "maxAcceleration": 10.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 1500.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 10.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 1500.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "CENTER PATHS",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
