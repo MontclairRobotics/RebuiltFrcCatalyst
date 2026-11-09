@@ -5,6 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.util.TunerConstants;
 
 public class RobotContainer {
 
@@ -12,4 +15,13 @@ public class RobotContainer {
 	public static CommandPS5Controller driverController = new CommandPS5Controller(0);
 	public static CommandPS5Controller operatorController = new CommandPS5Controller(1);
 
+	public static Shooter shooter;
+	public static CommandSwerveDrivetrain drivetrain;
+
+
+	public RobotContainer(){
+		shooter = new Shooter();
+		drivetrain = TunerConstants.createDrivetrain();
+
+	}
 }
