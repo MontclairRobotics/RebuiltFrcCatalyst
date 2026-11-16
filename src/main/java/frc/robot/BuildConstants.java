@@ -11,9 +11,15 @@ public final class BuildConstants {
   public static final String GIT_SHA = "2b984c63c41420dfbcf08debe50ac2a0f359904d";
   public static final String GIT_DATE = "2026-10-07 15:56:59 EDT";
   public static final String GIT_BRANCH = "main";
+<<<<<<< Updated upstream
   public static final String BUILD_DATE = "2026-10-26 14:53:42 EDT";
   public static final long BUILD_UNIX_TIME = 1793040822279L;
   public static final int DIRTY = 0;
+=======
+  public static final String BUILD_DATE = "2026-10-20 15:36:02 EDT";
+  public static final long BUILD_UNIX_TIME = 1792524962384L;
+  public static final int DIRTY = 1;
+>>>>>>> Stashed changes
 
   private BuildConstants(){}
 }
