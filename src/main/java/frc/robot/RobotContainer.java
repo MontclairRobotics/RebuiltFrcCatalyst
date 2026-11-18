@@ -19,6 +19,20 @@ public class RobotContainer {
 	public static CommandSwerveDrivetrain drivetrain;
 
 
+	public static boolean VISION_DEBUG = true;
+	public static boolean TURRET_DEBUG = false;
+	public static boolean FLYWHEEL_DEBUG = false;
+	public static boolean HOOD_DEBUG  = false;
+	public static boolean INDEXER_DEBUG = false;
+	public static boolean SERIALIZER_DEBUG = false;
+	public static boolean ROLLERS_DEBUG = false;
+	public static boolean PIVOT_DEBUG = false;
+	public static boolean DRIVETRAIN_DEBUG = false;
+	public static boolean SUPERSTRUCTURE_DEBUG = false;
+
+	public static boolean isUsingMegaTag1 = false;
+	public static boolean isUsingMegaTag2 = false;
+
 	public RobotContainer(){
 		shooter = new Shooter();
 		drivetrain = TunerConstants.createDrivetrain();

@@ -1,0 +1,72 @@
+// Copyright (c) 2021-2026 Littleton Robotics
+// http://github.com/Mechanical-Advantage
+//
+// Use of this source code is governed by a BSD
+// license that can be found in the LICENSE file
+// at the root directory of this project.
+
+package frc.robot.subsystems.vision;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+
+public class VisionConstants {
+	// AprilTag layout
+	public static AprilTagFieldLayout aprilTagLayout =
+		AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+
+	// Camera names, must match names configured on coprocessor
+	// TODO: name these better
+	public static String camera0Name = "limelight-one"; // back limelight
+	public static String camera1Name = "limelight-two"; // other limelight, on the right
+	public static String camera2Name = "limelight-three"; // limelight 3, on the left (shooter side)
+
+
+	// Basic filtering thresholds
+	public static double maxAmbiguity = 0.3;
+	public static double maxZError = 0.75;
+
+	// Standard deviation baselines, for 1 meter distance and 1 tag
+	// (Adjusted automatically based on distance and # of tags)
+	public static double linearStdDevBaseline = 0.08; // Meters
+	public static double angularStdDevBaseline = 0.06; // Radians
+
+	public static double linearStdDevFloor = 0.4; // Meters
+	public static double angularStdDevFloor = 0.1; // Radians
+
+	// Standard deviation multipliers for each camera
+	// (Adjust to trust some cameras more than others)
+	// value greater than one, trust cameras less, value less than one, trust cameras more
+	// TODO: check the above statement ^^
+	public static double[] cameraStdDevFactors =
+		new double[] {
+			1.0, // Camera 0
+			1.0, // Camera 1
+			1.0
+		};
+
+	// Multipliers to apply for MegaTag 2 observations
+	public static double linearStdDevMegatag2Factor = 1; // More stable than full 3D solve
+	public static double angularStdDevMegatag2Factor =
+		Double.POSITIVE_INFINITY; // No rotation data available
+
+	// Tags where the x position of the robot must be less than the tag's x position
+    public static int[] xLessThanTagIds = new int[] {1, 3, 4, 6, 23, 25, 26, 28};
+    // Tags where the x position of the robot must be greater than the tag's x position
+    public static int[] xGreaterThanTagIds = new int[] {7, 9, 10, 12, 17, 19, 20, 22};
+    // Tags where the y position of the robot must be less than the tag's y position
+    public static int[] yLessThanTagIds = new int[] {5, 8, 18, 27};
+    // Tags where the y position of the robot must be greater than the tag's y position
+    public static int[] yGreaterThanTagIds = new int[] {2, 11, 21, 24};
+
+    // Maps from tag ID to the relevant coordinate of the tag's position, for quick lookup during filtering
+    public static Map<Integer, Double> xLessThanTags = Arrays.stream(xLessThanTagIds).boxed().collect(Collectors.toMap(tagId -> tagId, tagId -> aprilTagLayout.getTagPose(tagId).get().getX()));
+    public static Map<Integer, Double> xGreaterThanTags = Arrays.stream(xGreaterThanTagIds).boxed().collect(Collectors.toMap(tagId -> tagId, tagId -> aprilTagLayout.getTagPose(tagId).get().getX()));
+    public static Map<Integer, Double> yLessThanTags = Arrays.stream(yLessThanTagIds).boxed().collect(Collectors.toMap(tagId -> tagId, tagId -> aprilTagLayout.getTagPose(tagId).get().getY()));
+    public static Map<Integer, Double> yGreaterThanTags = Arrays.stream(yGreaterThanTagIds).boxed().collect(Collectors.toMap(tagId -> tagId, tagId -> aprilTagLayout.getTagPose(tagId).get().getY()));
+
+}

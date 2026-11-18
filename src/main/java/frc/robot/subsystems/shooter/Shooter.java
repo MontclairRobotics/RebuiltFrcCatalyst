@@ -91,8 +91,8 @@ public class Shooter {
     .pid(HoodConstants.kP, 0.0, HoodConstants.kD)
     .gravityGain(HoodConstants.kG)
     .motionMagic(
-      HoodConstants.MOTION_MAGIC_CRUISE_VELOCITY.in(RotationsPerSecond), 
-      HoodConstants.MOTION_MAGIC_ACCELERATION.in(RotationsPerSecondPerSecond), 
+      HoodConstants.MOTION_MAGIC_CRUISE_VELOCITY.in(RotationsPerSecond),
+      HoodConstants.MOTION_MAGIC_ACCELERATION.in(RotationsPerSecondPerSecond),
       HoodConstants.MOTION_MAGIC_JERK
     )
     .build()
