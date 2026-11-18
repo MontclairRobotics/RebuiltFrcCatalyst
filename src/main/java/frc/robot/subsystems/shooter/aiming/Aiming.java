@@ -60,22 +60,6 @@ public class Aiming {
 		return sol;
 	}
 
-	public static Command aimShooter(FlywheelMechanism flywheel, TurretMechanism turret, RotationalMechanism hood, TargetLocation target){
-		Supplier<AimingSolver.Solution> sol = calculateShootingParameters(target);
-
-		return Commands.parallel(
-			turret.track(
-				sol,
-				() -> RobotContainer.drivetrain.getWrappedHeading().getDegrees(),
-				() -> Math.toDegrees(RobotContainer.drivetrain.getState().Speeds.omegaRadiansPerSecond)
-			),
-			
-			flywheel.track(() -> sol.get().shooterRpm() / 60.0),
-			
-			hood.track(() -> sol.get().hoodDegrees())
-		);
-	}
-
 	public enum TargetLocation {
 		HUB(FieldConstants.Hub.HUB_LOCATION),
 		FERRY_LEFT(FieldConstants.FerryWaypoints.LEFT_FERRYING_POINT),

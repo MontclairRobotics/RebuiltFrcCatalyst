@@ -507,29 +507,29 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		return alignToAngleFieldRelativeContinuousCommand(() -> getSnakeDriveAngle(), false);
 	}
 
-	// public Command zeroGyroCommand() {
-	// 	return Commands.runOnce(() -> zeroGyro(), RobotContainer.drivetrain);
-	// }
+	public Command zeroGyroCommand() {
+		return Commands.runOnce(() -> zeroGyro(), RobotContainer.drivetrain);
+	 }
 
-	// public Command resetPoseCommand(Pose2d pose) {
-	// 	return Commands.runOnce(() -> resetPose(PoseUtils.flipPoseAlliance(pose)), this);
-	// }
+	public Command resetPoseCommand(Pose2d pose) {
+	 	return Commands.runOnce(() -> resetPose(PoseUtils.flipPoseAlliance(pose)), this);
+	}
 
-	// public Command toRobotRelativeCommand() {
-	// 	return Commands.runOnce(() -> toRobotRelative(), RobotContainer.drivetrain);
-	// }
+	public Command toRobotRelativeCommand() {
+		return Commands.runOnce(() -> toRobotRelative(), RobotContainer.drivetrain);
+	}
 
-	// public Command toFieldRelativeCommand() {
-	// 	return Commands.runOnce(() -> toFieldRelative(), RobotContainer.drivetrain);
-	// }
+	public Command toFieldRelativeCommand() {
+	 	return Commands.runOnce(() -> toFieldRelative(), RobotContainer.drivetrain);
+	}
 
-	// public Command alignToAngleRobotRelativeCommand(Rotation2d angle, boolean lockDrive) {
-	// 	return Commands.sequence(
-	// 		Commands.runOnce(() -> setRobotRelativeAngle(angle), RobotContainer.drivetrain),
-	// 		Commands.run(() -> alignToAngleRobotRelative(lockDrive), RobotContainer.drivetrain)
-	// 			.until(() -> isRobotAtAngleSetPoint)
-	// 	);
-	// }
+	public Command alignToAngleRobotRelativeCommand(Rotation2d angle, boolean lockDrive) {
+	 	return Commands.sequence(
+	 		Commands.runOnce(() -> setRobotRelativeAngle(angle), RobotContainer.drivetrain),
+	 		Commands.run(() -> alignToAngleRobotRelative(lockDrive), RobotContainer.drivetrain)
+	 			.until(() -> isRobotAtAngleSetPoint)
+	 	);
+	}
 
 	public Command alignToAngleRobotRelativeContinuousCommand(
 		Supplier<Rotation2d> angle, boolean lockDrive) {
