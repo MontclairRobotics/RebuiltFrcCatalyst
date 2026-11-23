@@ -44,7 +44,7 @@ public class Intake {
 
     public Command jostleCommand() {
         return Commands.parallel(
-            rollers.intake(), 
+            rollers.intake(),
             Commands.repeatingSequence(
                 pivot.goTo("JIGGLE"),
                 pivot.goTo("MIN")

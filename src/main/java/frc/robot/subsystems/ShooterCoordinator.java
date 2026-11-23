@@ -1,16 +1,13 @@
 package frc.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.catalyst.util.AimingSolver.Solution;
 import frc.robot.Superstructure;
 import frc.robot.subsystems.shooter.aiming.Aiming;
-import frc.robot.subsystems.shooter.aiming.Aiming.TargetLocation;
 
 public class ShooterCoordinator extends SubsystemBase{
 
