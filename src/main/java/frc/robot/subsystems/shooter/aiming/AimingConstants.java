@@ -2,13 +2,8 @@ package frc.robot.subsystems.shooter.aiming;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.interpolation.Interpolatable;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
-import edu.wpi.first.math.interpolation.InverseInterpolator;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import edu.wpi.first.units.measure.Angle;
@@ -202,7 +197,7 @@ public class AimingConstants {
 		SIM_FERRY_MAP.put(6.628582671689323, new SimShotSettings(Degrees.of(40), MetersPerSecond.of(8.5)));//
 		SIM_FERRY_MAP.put(5.147707889525594, new SimShotSettings(Degrees.of(40), MetersPerSecond.of(7.5)));//
 		*/
-		
+
 		SIM_FERRY_TOF_MAP.add(9.59, 1.8);
 		SIM_FERRY_TOF_MAP.add(3.6669131055202966, 1.06);
 		SIM_FERRY_TOF_MAP.add(8.666543502404746, 1.78);

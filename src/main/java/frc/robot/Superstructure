@@ -33,7 +33,7 @@ public class Superstructure extends SubsystemBase {
 	@Override
 	public void periodic() {
 
-		Translation2d turretPos = RobotContainer.shooter.getTurretFieldRelativePosition();
+		Translation2d turretPos = RobotContainer.turret.getFieldRelativePosition();
 		Pose2d robotPose = RobotContainer.drivetrain.getRobotPose();
 		double velocityInput = RobotContainer.drivetrain.getForwardVelocityFromController();
 
@@ -57,7 +57,7 @@ public class Superstructure extends SubsystemBase {
 	};
 
 	public Superstructure() {
-		//loopsPerLog = RobotContainer.SUPERSTRUCTURE_DEBUG ? 1 : 5;
+		loopsPerLog = RobotContainer.SUPERSTRUCTURE_DEBUG ? 1 : 5;
 		hasRecentlyResetTrenchZones = false;
 
 		currentTrenchDangerZones = buildTrenchDangerZones(defaultWidth);

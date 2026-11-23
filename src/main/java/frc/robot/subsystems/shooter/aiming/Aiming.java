@@ -11,7 +11,6 @@ import frc.lib.catalyst.mechanisms.TurretMechanism;
 import frc.lib.catalyst.util.AimingSolver;
 import frc.lib.catalyst.util.InterpolatingTable;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.FieldConstants;
 import frc.robot.util.PoseUtils;
 
@@ -54,10 +53,26 @@ public class Aiming {
 			.hoodAngle(angleMap)
 			.build();
 
-		Supplier<AimingSolver.Solution> sol = 
+		Supplier<AimingSolver.Solution> sol =
 			() -> solver.solve(RobotContainer.drivetrain.getRobotPose(), RobotContainer.drivetrain.getFieldRelativeSpeeds());
 
 		return sol;
+	}
+
+	public static Command aimShooter(FlywheelMechanism flywheel, TurretMechanism turret, RotationalMechanism hood, TargetLocation target){
+		Supplier<AimingSolver.Solution> sol = calculateShootingParameters(target);
+
+		return Commands.parallel(
+			turret.track(
+				sol,
+				() -> RobotContainer.drivetrain.getWrappedHeading().getDegrees(),
+				() -> Math.toDegrees(RobotContainer.drivetrain.getState().Speeds.omegaRadiansPerSecond)
+			),
+
+			flywheel.track(() -> sol.get().shooterRpm() / 60.0),
+
+			hood.track(() -> sol.get().hoodDegrees())
+		);
 	}
 
 	public enum TargetLocation {

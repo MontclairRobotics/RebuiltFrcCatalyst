@@ -5,16 +5,14 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
-import com.ctre.phoenix6.hardware.TalonFX;
 
-import frc.lib.catalyst.hardware.MotorType;
 import frc.lib.catalyst.mechanisms.RollerMechanism;
 import frc.lib.catalyst.mechanisms.RotationalMechanism;
 import frc.robot.constants.PivotConstants;
 import frc.robot.constants.RollersConstants;
 
 public class Intake {
-    
+
     private final RollerMechanism rollers = new RollerMechanism(RollerMechanism.Config.builder()
     .name("Rollers")
     .motor(RollersConstants.CAN_ID)
@@ -23,7 +21,7 @@ public class Intake {
     .currentLimit(RollersConstants.SUPPLY_CURRENT_LIMIT)
     .statorCurrentLimit(RollersConstants.STATOR_CURRENT_LIMIT)
     .build());
-    
+
     private final RotationalMechanism pivot = new RotationalMechanism(RotationalMechanism.Config.builder()
     .name("Pivot")
     .motor(PivotConstants.CAN_ID)
