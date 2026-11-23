@@ -7,10 +7,16 @@ import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.catalyst.hardware.MotorType;
@@ -31,6 +37,8 @@ import frc.robot.subsystems.shooter.aiming.Aiming.TargetLocation;
 import frc.robot.subsystems.shooter.aiming.AimingConstants.ShootingParameters;
 
 public class Shooter {
+  private double lastSimShotTime = 0.0;
+
   private static final FlywheelMechanism flywheel = new FlywheelMechanism(
     FlywheelMechanism.Config.builder()
       .name("Flywheel")
@@ -77,7 +85,6 @@ public class Shooter {
     .build()
   );
 
-
   private static final TurretMechanism turret = new TurretMechanism(
       TurretMechanism.Config.builder()
       .name("Turret")
@@ -94,25 +101,25 @@ public class Shooter {
       .build()
     );
 
-    private static final RotationalMechanism hood = new RotationalMechanism(
-      RotationalMechanism.Config.builder()
-      .name("Hood")
-      .motor(HoodConstants.CAN_ID)
-      .motorType(MotorType.KRAKEN_X60_FOC)
-      .gearRatio(HoodConstants.GEARING)
-      .length(HoodConstants.HOOD_LENGTH.in(Meters))
-      .range(HoodConstants.MIN_ANGLE.in(Degrees), HoodConstants.MAX_ANGLE.in(Degrees))
-      .currentLimit(HoodConstants.SUPPLY_CURRENT_LIMIT)
-      .statorCurrentLimit(HoodConstants.STATOR_CURRENT_LIMIT)
-      .pid(HoodConstants.kP, 0.0, HoodConstants.kD)
-      .gravityGain(HoodConstants.kG)
-      .motionMagic(
-        HoodConstants.MOTION_MAGIC_CRUISE_VELOCITY.in(RotationsPerSecond), 
-        HoodConstants.MOTION_MAGIC_ACCELERATION.in(RotationsPerSecondPerSecond), 
-        HoodConstants.MOTION_MAGIC_JERK
-      )
-      .build()
-    );
+  private static final RotationalMechanism hood = new RotationalMechanism(
+    RotationalMechanism.Config.builder()
+    .name("Hood")
+    .motor(HoodConstants.CAN_ID)
+    .motorType(MotorType.KRAKEN_X60_FOC)
+    .gearRatio(HoodConstants.GEARING)
+    .length(HoodConstants.HOOD_LENGTH.in(Meters))
+    .range(HoodConstants.MIN_ANGLE.in(Degrees), HoodConstants.MAX_ANGLE.in(Degrees))
+    .currentLimit(HoodConstants.SUPPLY_CURRENT_LIMIT)
+    .statorCurrentLimit(HoodConstants.STATOR_CURRENT_LIMIT)
+    .pid(HoodConstants.kP, 0.0, HoodConstants.kD)
+    .gravityGain(HoodConstants.kG)
+    .motionMagic(
+      HoodConstants.MOTION_MAGIC_CRUISE_VELOCITY.in(RotationsPerSecond), 
+      HoodConstants.MOTION_MAGIC_ACCELERATION.in(RotationsPerSecondPerSecond), 
+      HoodConstants.MOTION_MAGIC_JERK
+    )
+    .build()
+  );
   
   public static Command movingAimCommand(TargetLocation target){
     Supplier<AimingSolver.Solution> sol = Aiming.calculateShootingParameters(target);
@@ -130,27 +137,27 @@ public class Shooter {
     );
 	}
 
-    public static TargetLocation getTargetFromGoal(ShooterGoal goal) {
-        TargetLocation target = null;
+  public static TargetLocation getTargetFromGoal(ShooterGoal goal) {
+      TargetLocation target = null;
 
-        switch (goal.mode()) {
-            case SCORING:
-                target = TargetLocation.HUB;
-                break;
-            case FERRYING_LEFT:
-                target = TargetLocation.FERRY_LEFT;
-                break;
-            case FERRYING_RIGHT:
-                target = TargetLocation.FERRY_RIGHT;
-                break;
-            case IDLE:
-                break;
-        };
+      switch (goal.mode()) {
+          case SCORING:
+              target = TargetLocation.HUB;
+              break;
+          case FERRYING_LEFT:
+              target = TargetLocation.FERRY_LEFT;
+              break;
+          case FERRYING_RIGHT:
+              target = TargetLocation.FERRY_RIGHT;
+              break;
+          case IDLE:
+              break;
+      };
 
-        return target;
-    }
+      return target;
+  }
 
-  public static Command shoot(Supplier <ShooterGoal> goalSupplier){
+  public Command shoot(Supplier <ShooterGoal> goalSupplier){
     return Commands.run(() -> {
 
       ShooterGoal goal = goalSupplier.get();
@@ -176,12 +183,16 @@ public class Shooter {
 
       flywheel.track(() -> sol.get().shooterRpm() / 60.0);
 
-      boolean ready = turret.atSetpoint()
-        && flywheel.atSpeed() 
-        && hood.atSetpoint(HoodConstants.MIN_ANGLE.in(Degrees));
+      boolean ready = goal.intent().isToFeedBalls() &&
+                      hood.atSetpoint(sol.get().hoodDegrees()) &&
+                      turret.atSetpoint();
 
       if(ready) {
-        flywheel.spinUp(sol.get().shooterRpm() / 60.0);
+        Commands.parallel(
+          flywheel.spinUp(sol.get().shooterRpm() / 60.0),
+          indexer.spinUp(IndexerConstants.SPIN_VELOCITY.in(RotationsPerSecond)),
+          serializer.spinUp(SerializerConstants.SPIN_VELOCITY.in(RotationsPerSecond))
+        );
       } else {
           // nothing needed
       }
@@ -228,7 +239,9 @@ public class Shooter {
       });
   }
 
-  public Command shoot(){
-
+  public Command getDefaultCommand(){
+    //if(RobotBase.isReal()){
+      return shoot(() -> RobotContainer.shooterCoordinator.getCurrentGoal());
+    //}
   }
 }
