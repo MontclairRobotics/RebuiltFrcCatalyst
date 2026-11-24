@@ -35,7 +35,7 @@ public class Intake {
     .build()
     );
 
-     public Command intakeCommand() {
+    public Command intakeCommand() {
         return Commands.parallel(
             pivot.goTo("MIN"),
             rollers.intake()
@@ -52,5 +52,12 @@ public class Intake {
         );
     }
 
+    public RollerMechanism getRollers(){
+        return rollers;
+    }
+
+    public RotationalMechanism getPivot(){
+        return pivot;
+    }
 
 }

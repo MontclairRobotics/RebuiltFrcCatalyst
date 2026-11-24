@@ -82,7 +82,7 @@ public class Shooter {
       .motorType(MotorType.KRAKEN_X60_FOC)
       .cancoder(TurretConstants.ENCODER_ID, TurretConstants.ROTOR_TO_SENSOR_RATIO)
       .gearRatio(TurretConstants.GEARING)
-      .range(TurretConstants.MIN_ANGLE.in(Degrees), TurretConstants.MIN_ANGLE.in(Degrees))
+      .range(TurretConstants.MIN_ANGLE.in(Degrees), TurretConstants.MAX_ANGLE.in(Degrees))
       .pid(TurretConstants.kP, 0.0, TurretConstants.kD)
       .feedforward(TurretConstants.kS, TurretConstants.kV)
       //no jerk in constants - have to convert all to doubles
@@ -230,8 +230,6 @@ public class Shooter {
   }
 
   public Command getDefaultCommand(){
-    //if(RobotBase.isReal()){
       return shoot(() -> RobotContainer.shooterCoordinator.getCurrentGoal());
-    //}
   }
 }

@@ -4,20 +4,31 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.catalyst.sim.SimDashboard;
 import frc.robot.commands.JoystickDriveCommand;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.WheelRadiusCharacterization.Direction;
+import frc.robot.constants.Constants;
+import frc.robot.constants.DriveConstants;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShooterCoordinator;
 import frc.robot.subsystems.drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.PoseUtils;
+import frc.robot.util.Telemetry;
 import frc.robot.util.TunerConstants;
+import frc.robot.util.sim.FuelSim;
 
 public class RobotContainer {
 	// Controllers
@@ -29,8 +40,16 @@ public class RobotContainer {
 	public static Trigger operatorWantsToTrackFerryPointTrigger = operatorController.triangle();
 	public static boolean shouldShootAuto = false;
 
-	public static Shooter shooter;
 	public static CommandSwerveDrivetrain drivetrain;
+	public static Intake intake;
+	public static Shooter shooter;
+
+	public static ShooterCoordinator shooterCoordinator;
+
+	private SwerveDriveSimulation driveSimulation;
+	//private SimGamePieces fuel;
+	private final Telemetry logger = new Telemetry(DriveConstants.MAX_SPEED.in(MetersPerSecond));
+	public static FuelSim fuelSim = new FuelSim("fuel");
 
 	public static boolean VISION_DEBUG = true;
 	public static boolean TURRET_DEBUG = false;
@@ -46,12 +65,17 @@ public class RobotContainer {
 	public static boolean isUsingMegaTag1 = false;
 	public static boolean isUsingMegaTag2 = false;
 
-	public static ShooterCoordinator shooterCoordinator;
-
 	public static Trigger precisionTrigger = driverController.R2();
+	public static Trigger robotRelativeTrigger = driverController.L1();
+	public static Trigger xModeTrigger = driverController.R1();
+	public static Trigger turboTrigger = driverController.L2();
+
+	final SimDashboard dash = new SimDashboard();
 
 	public RobotContainer(){
+
 		drivetrain = TunerConstants.createDrivetrain();
+		intake = new Intake();
 
 		shooter = new Shooter();
 
@@ -61,13 +85,59 @@ public class RobotContainer {
 			operatorWantsToTrackFerryPointTrigger,
 			() -> shouldShootAuto
 		);
+
+		if(!RobotBase.isReal()){
+			dash.add(shooter.getFlywheel());
+			dash.add(shooter.getIndexer());
+			dash.add(shooter.getSerializer());
+			dash.add(shooter.getTurret());
+			dash.add(shooter.getHood());
+
+			dash.add(intake.getRollers());
+			dash.add(intake.getPivot());
+
+			dash.start();
+
+			driveSimulation = drivetrain.mapleSimSwerveDrivetrain.mapleSimDrive;
+			//fuel = new SimGamePieces("Fuel");
+			fuelSim.enableAirResistance();
+			fuelSim.start();
+
+			fuelSim.registerRobot(
+				Constants.BUMPER_WIDTH,
+				Constants.BUMPER_WIDTH,
+				Inches.of(6),
+				() -> drivetrain.getRobotPose(),
+				() -> drivetrain.getFieldRelativeSpeeds()
+			);
+
+			fuelSim.spawnStartingFuel();
+		}
+
+		configureBindings();
+
+    drivetrain.registerTelemetry(logger::telemeterize);
+	}
+
+	public void update(){
+		dash.update();
+	}
+
+	public void simulationPeriodic(){
+		SimulatedArena.getInstance().simulationPeriodic();
+
+    // 3. Stream game pieces for AdvantageScope.
+    //fuel.clear();
+    //for (var piece : SimulatedArena.getInstance().getGamePiecesByType("Fuel")) {
+    //    fuel.set(piece, piece.getPose3d());
+    //}
+    //fuel.publish();   // -> /Catalyst/Sim/Fu
 	}
 
 	private void configureBindings(){
 		driverController.povRight().whileTrue(new WheelRadiusCharacterization(Direction.CLOCKWISE, drivetrain));
 		driverController.povLeft().whileTrue(new WheelRadiusCharacterization(Direction.COUNTER_CLOCKWISE, drivetrain));
 
-		// driver
 		drivetrain.setDefaultCommand(new JoystickDriveCommand());
 		//driverController.touchpad().onTrue(drivetrain.zeroGyroCommand());
 		//driverController.PS().onTrue(drivetrain.resetPoseCommand(new Pose2d(3.6, 4.035, new Rotation2d())));
